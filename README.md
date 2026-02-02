@@ -78,23 +78,26 @@ High nitrate concentrations in groundwater pose a significant health concern for
 
 ---
 
-### ArcGIS Workflow: Visualization and Outputs
+### Technologies Used
 
-1. **Import Outputs**
-   - Load Python-generated nitrate rasters and enriched census tract shapefiles into ArcGIS.
-   - Ensure compatibility for creating visualizations.
+The following technologies were selected to meet the requirements for the project workflow. All selections meet the technology requirements for the app workflow, and justification for these choices is provided in the project report.
 
-2. **Map Styling**
-   - Create nitrate heatmaps with graduated color schemes to emphasize concentration differences.
-   - Generate cancer rate choropleths using census tract data.
-   - Overlay nitrate heatmaps and cancer choropleths for spatial correlation visualization.
+#### Programming Languages & Platforms
+- **Python**: Used for data cleaning, preprocessing, and statistical analysis.
+- **ArcGIS**: Used for spatial data visualization and map creation.
 
-3. **Final Map Elements**
-   - Add titles, legends, scale bars, and north arrows.
-   - Annotate any spatial trends (e.g., regions with high nitrate and high cancer rates).
+#### Python Libraries
+- **Geopandas**: To manipulate and process spatial data in shapefiles (loading, reprojecting, cleaning data).
+- **GDAL**: For reprojecting and processing spatial data.
+- **SciPy**: To implement the inverse distance weighting (IDW) interpolation for nitrate data.
+- **Rasterstats**: Used to align raster data with census tract boundaries via zonal statistics.
+- **Statsmodels**: For performing statistical regression analysis, including \( R^2 \) and p-values.
 
-4. **Export Results**
-   - Export polished maps as high-resolution PNG, TIFF, or PDF files for the project report.
+#### Supporting Tools
+- **Graphviz**: Needed for PlantUML local rendering in the README (generating high-level workflow diagrams).
+- **PlantUML**: Used to visually represent the project workflow as a diagram.
+- **VS Code**: IDE used for writing and testing Python code as well as document preparation.
+- **Git/GitHub**: Version control system to track changes and host the repository.
 
 ---
 
