@@ -1,0 +1,48 @@
+@startuml
+
+!theme sketchy-outline
+
+start
+
+:Input Shapefiles;
+note right
+- well_nitrate.shp  
+- cancer_tracts.shp  
+- cancer_county.shp
+end note
+
+:Data Preparation & Cleaning;
+
+:Interpolation: IDW (nitrate);
+note right
+- Create continuous raster surface  
+- Allow user to adjust \( k > 1 \)
+end note
+
+:Normalize Cancer Rates;
+note right
+- Population-based normalization at tract level
+end note
+
+:Data Alignment;
+note right
+- Align raster + census boundaries via Zonal  
+- Combine nitrate + cancer data into one table
+end note
+
+:Statistical Regression;
+note right
+- Perform regression: Nitrate vs Cancer  
+- Output metrics such as \( R^2, p-values\)
+end note
+
+:Visualization & Map Creation;
+note right
+- Heatmaps (nitrate)  
+- Choropleths (cancer rates)  
+- Overlay maps
+end note
+
+stop
+
+@enduml
