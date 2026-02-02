@@ -156,61 +156,99 @@ This schedule breaks the project into distinct development phases, ensuring prog
 
 ---
 
+## 3. Project Timeline and Key Milestones
+
+The following schedule is designed to guide project development, with internal milestones to track progress week-to-week. **Note:** The timeline is subject to change as the work progresses and new insights or constraints emerge. The official project deliverables are due on **Feb 16** (Beta Version) and **March 2** (Final Submission).
+
+| **Date**        | **Phase & Tasks**                                     | **Deliverables**                                                                                |
+|------------------|-------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| **2026-02-02**   | **Phase 1: Data Preparation and Setup (Week 1)**      | Internal Deliverables: Scripts for data cleaning, validation, and nitrate interpolation.       |
+| **2026-02-09**   | **Phase 2: Data Integration and Analysis (Week 2)**   | Internal Deliverables: Aligned datasets, regression scripts, and draft visualizations.         |
+| **2026-02-16**   | **Beta Submission Due: 11:59 PM**                     | **Official Deliverable**: <br>1. Short video demo or <br>2. Live Slack demo with progress/questions. |
+| **2026-02-23**   | **Phase 3: Feedback Refinement (Week 3)**             | Internal Deliverables: Refined regression outputs, visualization improvements, enhanced workflows. |
+| **2026-03-02**   | **Final Submission Due: 11:59 PM**                    | **Official Deliverable**: <br>1. Final report summarizing findings. <br>2. Demo video showing app design and results. <br>3. Submit video for peer review. |
+
+---
+
 ### Detailed Schedule Breakdown
 
-#### **Phase 1: Initial Development (Week 1) - Due 2026-02-09**
+#### **Phase 1: Data Preparation and Setup (Week 1) - Internal Milestone**
 **Focus**:
-- Build solid foundations for data preparation and analysis.
-- Develop scripts for loading datasets, reprojecting, and spatial validation.
-- Implement nitrate interpolation (IDW) methods with initial raster outputs.
-- Normalize cancer rates by population for census tracts.
+- Establish foundational workflows for data preprocessing:
+  - Clean and validate shapefiles for water quality and cancer data.
+  - Reproject datasets into a consistent CRS.
+  - Remove null or invalid entries to ensure data quality.
+- Implement **nitrate interpolation** using IDW:
+  - Generate a simple nitrate raster (GeoTIFF) for early testing.
+- Normalize cancer rates for census tracts:
+  - Create population-based cancer rates for each tract.
 
-**Deliverables**:
-- Cleaned shapefiles and aligned datasets for nitrate and cancer data.
-- Python scripts for data cleaning and interpolation.
-- Nitrate raster files and enriched cancer tract shapefiles.
+**Internal Deliverables**:
+- Python scripts for data cleaning, CRS reprojecting, and basic IDW interpolation.
+- Clean shapefiles (example at this point):
+  - `well_nitrate.shp` (cleaned nitrate data).
+  - `cancer_tracts_with_rates.shp` (normalized cancer rates).
+- A draft **nitrate raster** as a GeoTIFF.
 
 ---
 
-#### **Phase 2: Beta Development (Week 2) - Due 2026-02-16**
+#### **Phase 2: Data Integration and Analysis (Week 2) - Internal Milestone**
 **Focus**:
-- Perform basic statistical analyses (e.g., initial regressions) to assess project feasibility.
-- Generate draft nitrate heatmaps, cancer choropleths, and basic overlay visualizations.
-- Wrap up the first implementation pass to create a full draft of the workflow.
+- Prepare for analysis by integrating datasets:
+  - Combine nitrate raster data with census tracts using zonal statistics.
+  - Compute mean nitrate values per census tract.
+  - Merge pollution and cancer datasets into one unified table (e.g., `aligned_data.csv`).
+- Perform **statistical regression**:
+  - Evaluate the relationship between cancer rates (y) and nitrate levels (x).
+  - Output regression metrics like \(R^2\) and p-values.
+- Create draft maps/visualizations:
+  - Simple heatmaps for nitrate levels.
+  - Choropleths for cancer rates.
+  - Overlay maps for combined insights.
 
-**Deliverables**:
-- Draft aligned datasets with regression outputs (`R^2`, p-values) saved as CSV files.
-- Preliminary visual outputs:
-  - Basic nitrate heatmaps.
-  - Census tract choropleths showing normalized cancer rates.
-  - Draft overlay maps.
-- **Beta Submission**:
-  - Record short video demo (< 2 minutes) showing current state and challenges/questions, OR...
-  - Schedule a Slack meeting for live beta feedback.
+**Internal Deliverables**:
+- A unified dataset (`aligned_data.csv`) containing nitrate and cancer data.
+- Regression outputs: \(R^2\), p-values, and coefficients.
+- Draft visualizations:
+  - Nitrate heatmaps.
+  - Choropleths for cancer rates.
+  - Overlay maps.
 
 ---
 
-#### **Phase 3: Feedback Refinement (Week 3) - Due 2026-02-23**
-**Focus**:
-- Address feedback received from the beta submission/demo.
-- Refine regression methods and outputs as needed.
-- Enhance maps and final analysis reports for presentation.
-
-**Deliverables**:
-- Polished Python scripts and datasets, with revisions integrated.
-- Improved and styled visualizations from ArcGIS.
-- Refined statistical regression results.
+#### **Beta Submission - Due 2026-02-16**
+The **Beta Submission** represents the first full draft of the analysis pipeline:
+- **Official Deliverables**:
+  1. Record a short video demo (2–5 minutes) showcasing the project's current state, including key progress and any questions/challenges.
+  2. Alternatively, schedule a live Slack demo with the instructor.
 
 ---
 
-#### **Final Submission (Phase 4): 2026-03-02**
+#### **Phase 3: Feedback Refinement (Week 3) - Internal Milestone**
 **Focus**:
-- Deliver the full project report and demo (<= 5 minutes) showing the completed application, results, and conclusions.
+- Integrate feedback from the beta submission into all aspects of the workflow:
+  - Refine nitrate interpolation (experiment with different \(k\)-values).
+  - Improve regression scripts and ensure meaningful confidence/fit metrics.
+  - Style and enhance visualizations.
+- Ensure workflows are organized and reproducible:
+  - Clean and document Python scripts.
+  - Prepare cleaned output datasets.
 
-**Deliverables**:
-1. **Project Report**:
-   - Discuss the problem, methods, results, and conclusions drawn from the data.
-   - Final reflection on nitrate and cancer relationships.
-2. **Demo Video**:
-   - Walkthrough of the application design.
-   - Demonstrate running Python workflows and viewing results in ArcGIS.
+**Internal Deliverables**:
+- Enhanced nitrate interpolations and regression results.
+- Polished maps with improved styling.
+- Well-documented Python scripts and reproducible workflows.
+
+---
+
+#### **Final Submission - Due 2026-03-02**
+The **Final Submission** provides a polished presentation of the project's workflow and outcomes:
+- **Official Deliverables**:
+  1. **Final Project Report (<= 5 pages)**:
+     - Summarize the problem, methods, and results.
+     - Highlight key findings about the nitrate-cancer relationship.
+  2. **Demo Video (<= 5 minutes)**:
+     - Walk through the implementation and show outputs or workflows.
+     - Include final visualizations or analytical results.
+  3. **Peer Review Submission**:
+     - Upload the demo video to the peer review platform as part of the submission process.
