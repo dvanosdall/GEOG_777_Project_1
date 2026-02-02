@@ -41,6 +41,9 @@ The goal is to determine whether a statistical relationship exists between groun
 
 This plan leverages Python for data preprocessing, interpolation, and regression analysis while utilizing ArcGIS for visualization and map styling.
 
+[Back to Top](#table-of-contents)
+
+
 ---
 
 ## 1. Problem Overview
@@ -52,6 +55,9 @@ High nitrate concentrations in groundwater pose a significant health concern for
 3. **Spatial Alignment**: Align datasets (nitrate raster with census tracts) to conduct correlation analyses.  
 4. **Regression**: Perform regression analysis to assess relationships between nitrate levels and cancer rates.  
 5. **Outputs**: Communicate analysis results using clean, styled maps and comprehensive reports.
+
+[Back to Top](#table-of-contents)
+
 
 ---
 
@@ -88,6 +94,8 @@ High nitrate concentrations in groundwater pose a significant health concern for
      - Independent variable (\( x \)): Mean nitrate levels per census tract.
    - Export regression outputs, including coefficients, residuals, \( R^2 \), and p-values.
 
+[Back to Top](#table-of-contents)
+
 ---
 
 ### Technologies Used
@@ -110,6 +118,8 @@ The following technologies were selected to meet the requirements for the projec
 - **PlantUML**: Used to visually represent the project workflow as a diagram.
 - **VS Code**: IDE used for writing and testing Python code as well as document preparation.
 - **Git/GitHub**: Version control system to track changes and host the repository.
+
+[Back to Top](#table-of-contents)
 
 ---
 
@@ -152,19 +162,7 @@ The following diagram illustrates the workflow for the data processing steps:
      - Choropleths (cancer rates).
      - Overlay maps for comparative insights.
 
----
-
-## 3. Project Timeline and Key Milestones
-
-This schedule breaks the project into distinct development phases, ensuring progress aligns with the deliverables for each milestone.
-
-| **Date**        | **Phase & Tasks**                                     | **Deliverables**                                                                                |
-|------------------|-------------------------------------------------------|------------------------------------------------------------------------------------------------|
-| **2026-02-02**   | **Phase 1: Initial Development (Week 1)**        | Data cleaning scripts, nitrate interpolation tools, and normalized cancer rates.               |
-| **2026-02-09**   | **Phase 2: Beta Development (Week 2)**           | Aligned datasets, regression analysis scripts, and draft preview of outputs (e.g., maps).      |
-| **2026-02-16**   | **Beta Submission Due: 11:59 PM**                     | **Beta Version**: Deliver either: <br>1. Beta video demo (recorded) showing progress/questions <br>OR <br>2. Schedule Slack meeting for live demonstration and feedback. |
-| **2026-02-23**   | **Phase 3: Feedback Refinement (Week 3)**             | Integrate feedback from beta review. Enhance workflows, refine visualizations, and finalize all outputs. |
-| **2026-03-02**   | **Final Submission Due: 11:59 PM**                    | **Final Deliverables**: <br>1. Project Report (<= 5 pages) summarizing problem, methods, results, and conclusions. <br>2. Demo Video (<= 5 minutes) showcasing app design and results. |
+[Back to Top](#table-of-contents)
 
 ---
 
@@ -264,3 +262,7 @@ The **Final Submission** provides a polished presentation of the project's workf
      - Include final visualizations or analytical results.
   3. **Peer Review Submission**:
      - Upload the demo video to the peer review platform as part of the submission process.
+
+
+[Back to Top](#table-of-contents)
+
