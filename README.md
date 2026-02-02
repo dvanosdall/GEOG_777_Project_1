@@ -1,3 +1,20 @@
+Copilot said: Here’s how you can add a brief
+Here’s how you can add a brief introductory section explaining the repository's purpose and linking to it, placing it just above the # Python-Based Data Analysis + ArcGIS Visualization heading:
+
+Markdown
+# GEOG 777 Project 1 Repository
+
+This repository is designed to house the data cleaning scripts, massaged data, and workflows for **GEOG 777 Project 1**. These resources are focused on prepping the datasets used for spatial analysis and visualization in **ArcGIS**.
+
+- Scripts automate the data preparation process.
+- Processed data is ready to be used for generating spatial analyses and styled visualizations.
+
+Note: This repository does not include the ArcGIS environment or tools. For actual mapping and visualization processes, the outputs from the scripts here should be used directly in the ArcGIS application.
+
+Repository link: [dvanosdall/GEOG_777_Project_1](https://github.com/dvanosdall/GEOG_777_Project_1)
+
+---
+
 # Python-Based Data Analysis + ArcGIS Visualization
 
 ## Introduction
