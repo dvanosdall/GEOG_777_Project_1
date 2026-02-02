@@ -129,6 +129,9 @@ The following diagram illustrates the workflow for the data processing steps:
 
 ![Diagram](Diagram.png)
 
+
+[Back to Top](#table-of-contents)
+
 ---
 
 ## Steps
