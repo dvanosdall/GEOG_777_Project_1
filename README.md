@@ -230,7 +230,7 @@ The following schedule is designed to guide project development, with internal m
 ---
 
 #### **Beta Submission - Due 2026-02-16**
-The **Beta Submission** represents the first full draft of the analysis pipeline:
+The **Beta Submission**:
 - **Official Deliverables**:
   1. Record a short video demo (2–5 minutes) showcasing the project's current state, including key progress and any questions/challenges.
   2. Alternatively, schedule a live Slack demo with the instructor.
