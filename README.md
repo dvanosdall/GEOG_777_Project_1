@@ -11,6 +11,18 @@ Repository link: [dvanosdall/GEOG_777_Project_1](https://github.com/dvanosdall/G
 
 ---
 
+## Table of Contents
+- [Python-Based Data Analysis + ArcGIS Visualization](#python-based-data-analysis--arcgis-visualization)
+  - [Introduction](#introduction)
+  - [Problem Overview](#1-problem-overview)
+  - [Workflow to Solve the Problem](#2-workflow-to-solve-the-problem)
+- [Technologies Used](#technologies-used)
+- [High-Level Workflow Diagram](#high-level-workflow-diagram)
+- [Steps](#steps)
+- [Project Timeline and Key Milestones](#3-project-timeline-and-key-milestones)
+
+---
+
 # Python-Based Data Analysis + ArcGIS Visualization
 
 ## Introduction
