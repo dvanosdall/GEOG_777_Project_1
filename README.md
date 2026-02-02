@@ -140,6 +140,8 @@ The following diagram illustrates the workflow for the data processing steps:
      - Choropleths (cancer rates).
      - Overlay maps for comparative insights.
 
+---
+
 ## 3. Project Timeline and Key Milestones
 
 This schedule breaks the project into distinct development phases, ensuring progress aligns with the deliverables for each milestone.
