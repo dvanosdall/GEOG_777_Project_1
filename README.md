@@ -139,3 +139,76 @@ The following diagram illustrates the workflow for the data processing steps:
      - Heatmaps (nitrate data).
      - Choropleths (cancer rates).
      - Overlay maps for comparative insights.
+
+## 3. Project Timeline and Key Milestones
+
+This schedule breaks the project into distinct development phases, ensuring progress aligns with the deliverables for each milestone.
+
+| **Date**        | **Phase & Tasks**                                     | **Deliverables**                                                                                |
+|------------------|-------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| **2026-02-02**   | **Phase 1: Initial Development (Week 1)**        | Data cleaning scripts, nitrate interpolation tools, and normalized cancer rates.               |
+| **2026-02-09**   | **Phase 2: Beta Development (Week 2)**           | Aligned datasets, regression analysis scripts, and draft preview of outputs (e.g., maps).      |
+| **2026-02-16**   | **Beta Submission Due: 11:59 PM**                     | **Beta Version**: Deliver either: <br>1. Beta video demo (recorded) showing progress/questions <br>OR <br>2. Schedule Slack meeting for live demonstration and feedback. |
+| **2026-02-23**   | **Phase 3: Feedback Refinement (Week 3)**             | Integrate feedback from beta review. Enhance workflows, refine visualizations, and finalize all outputs. |
+| **2026-03-02**   | **Final Submission Due: 11:59 PM**                    | **Final Deliverables**: <br>1. Project Report (<= 5 pages) summarizing problem, methods, results, and conclusions. <br>2. Demo Video (<= 5 minutes) showcasing app design and results. |
+
+---
+
+### Detailed Schedule Breakdown
+
+#### **Phase 1: Initial Development (Week 1) - Due 2026-02-09**
+**Focus**:
+- Build solid foundations for data preparation and analysis.
+- Develop scripts for loading datasets, reprojecting, and spatial validation.
+- Implement nitrate interpolation (IDW) methods with initial raster outputs.
+- Normalize cancer rates by population for census tracts.
+
+**Deliverables**:
+- Cleaned shapefiles and aligned datasets for nitrate and cancer data.
+- Python scripts for data cleaning and interpolation.
+- Nitrate raster files and enriched cancer tract shapefiles.
+
+---
+
+#### **Phase 2: Beta Development (Week 2) - Due 2026-02-16**
+**Focus**:
+- Perform basic statistical analyses (e.g., initial regressions) to assess project feasibility.
+- Generate draft nitrate heatmaps, cancer choropleths, and basic overlay visualizations.
+- Wrap up the first implementation pass to create a full draft of the workflow.
+
+**Deliverables**:
+- Draft aligned datasets with regression outputs (`R^2`, p-values) saved as CSV files.
+- Preliminary visual outputs:
+  - Basic nitrate heatmaps.
+  - Census tract choropleths showing normalized cancer rates.
+  - Draft overlay maps.
+- **Beta Submission**:
+  - Record short video demo (< 2 minutes) showing current state and challenges/questions, OR...
+  - Schedule a Slack meeting for live beta feedback.
+
+---
+
+#### **Phase 3: Feedback Refinement (Week 3) - Due 2026-02-23**
+**Focus**:
+- Address feedback received from the beta submission/demo.
+- Refine regression methods and outputs as needed.
+- Enhance maps and final analysis reports for presentation.
+
+**Deliverables**:
+- Polished Python scripts and datasets, with revisions integrated.
+- Improved and styled visualizations from ArcGIS.
+- Refined statistical regression results.
+
+---
+
+#### **Final Submission (Phase 4): 2026-03-02**
+**Focus**:
+- Deliver the full project report and demo (<= 5 minutes) showing the completed application, results, and conclusions.
+
+**Deliverables**:
+1. **Project Report**:
+   - Discuss the problem, methods, results, and conclusions drawn from the data.
+   - Final reflection on nitrate and cancer relationships.
+2. **Demo Video**:
+   - Walkthrough of the application design.
+   - Demonstrate running Python workflows and viewing results in ArcGIS.
