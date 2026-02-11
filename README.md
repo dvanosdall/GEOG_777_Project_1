@@ -292,26 +292,26 @@ The **Final Submission** provides a polished presentation of the project's workf
 
 ## Running the Application
 
-# Prerequisites
+### Prerequisites
 1. **Python 3.13** installed
 2. **Virtual environment** activated
 3. **Dependencies** installed from `requirements.txt`
 
 ## Installation
 ```powershell```
-# Create and activate virtual environment
+### Create and activate virtual environment
 python -m venv venv
 .\venv\Scripts\Activate.ps1
 
-# Install dependencies
+### Install dependencies
 pip install -r requirements.txt
 
 ## Running
-# Start the Flask server
+### Start the Flask server
 python app.py
 
-# Open your browser to:
-# http://localhost:5000
+## Open your browser to:
+### http://localhost:5000
 
 [Back to Top](#table-of-contents)
 
