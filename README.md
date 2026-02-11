@@ -298,8 +298,8 @@ The **Final Submission** provides a polished presentation of the project's workf
 3. **Dependencies** installed from `requirements.txt`
 
 ## Installation
-1. **Open powershell
-2. **Navigate to cloned directory
+1. **Open powershell**
+2. **Navigate to cloned directory**
 
 ### Create and activate virtual environment
 python -m venv venv
