@@ -302,15 +302,21 @@ The **Final Submission** provides a polished presentation of the project's workf
 2. **Navigate to cloned directory**
 
 ### Create and activate virtual environment
-```python -m venv venv```
-```.\venv\Scripts\Activate.ps1```
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+```
 
 ### Install dependencies
-```pip install -r requirements.txt```
+```powershell
+pip install -r requirements.txt
+```
 
 ## Running
 ### Start the Flask server
-```python app.py```
+```powershell
+python app.py
+```
 
 ## Open your browser to:
 ### http://localhost:5000
