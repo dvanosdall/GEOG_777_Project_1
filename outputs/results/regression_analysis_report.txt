@@ -1,0 +1,95 @@
+======================================================================
+     REGRESSION ANALYSIS REPORT: NITRATE VS CANCER
+======================================================================
+
+RESEARCH QUESTION
+----------------------------------------------------------------------
+Do higher nitrate levels in drinking water predict higher cancer rates
+at the census tract level in Wisconsin?
+
+METHODS
+----------------------------------------------------------------------
+Analysis: Ordinary Least Squares (OLS) Linear Regression
+Dependent Variable: Cancer rate (cases per person)
+Independent Variable: Mean nitrate level (mg/L)
+Unit of Analysis: Census tracts
+Sample Size: 1316 tracts with complete data
+
+DESCRIPTIVE STATISTICS
+----------------------------------------------------------------------
+Nitrate (mg/L):
+  Mean: 3.95
+  SD:   3.54
+  Range: [-1.22, 16.45]
+
+Cancer Rate:
+  Mean: 0.1010
+  SD:   0.1487
+  Range: [0.0000, 1.0100]
+
+REGRESSION RESULTS
+----------------------------------------------------------------------
+Model Equation:
+  cancer_rate = 0.078897 + 0.005593 * nitrate
+
+Coefficients:
+  Intercept (Beta0): 0.078897
+  Slope (Beta1):     0.005593 (SE = 0.001147)
+  95% CI:         [0.003344, 0.007843]
+
+Model Fit:
+  R-squared:      0.0178
+  Adjusted R²:    0.0170
+  RMSE:           0.147333
+  F-statistic:    23.80
+  p-value:        0.000001
+
+STATISTICAL SIGNIFICANCE
+----------------------------------------------------------------------
+Result: HIGHLY SIGNIFICANT (p < 0.001)
+Interpretation: Strong evidence against null hypothesis.
+The relationship is very unlikely to be due to chance.
+
+EFFECT SIZE AND INTERPRETATION
+----------------------------------------------------------------------
+Direction: POSITIVE relationship
+For every 1 mg/L increase in nitrate, cancer rate
+increases by 0.005593 on average.
+
+Variance Explained: 1.8%
+Nitrate levels explain 1.8% of the variation
+in cancer rates across census tracts.
+
+Strength: VERY WEAK relationship
+
+REGRESSION ASSUMPTIONS
+----------------------------------------------------------------------
+1. Linearity: Relationship between X and Y should be linear
+   Check: Residuals vs Fitted plot
+
+2. Independence: Observations should be independent
+   Limitation: Spatial autocorrelation may exist (nearby tracts similar)
+
+3. Homoscedasticity: Constant variance of residuals
+   Check: Scale-Location plot
+
+4. Normality: Residuals should be normally distributed
+   Check: Q-Q plot and histogram
+
+LIMITATIONS
+----------------------------------------------------------------------
+1. Ecological fallacy: Tract-level associations may not apply to individuals
+2. Confounding variables: Other factors may affect cancer rates
+3. Temporal mismatch: Cancer and nitrate data may be from different periods
+4. Spatial autocorrelation: Violates independence assumption
+5. Interpolation error: IDW introduces uncertainty in nitrate estimates
+
+CONCLUSION
+----------------------------------------------------------------------
+There is statistically significant evidence of a positive relationship
+between nitrate levels and cancer rates at the census tract level.
+However, causation cannot be inferred from this observational analysis.
+
+======================================================================
+                         END OF REPORT
+======================================================================

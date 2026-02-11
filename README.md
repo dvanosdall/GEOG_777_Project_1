@@ -20,6 +20,11 @@ Repository link: [dvanosdall/GEOG_777_Project_1](https://github.com/dvanosdall/G
 - [High-Level Workflow Diagram](#high-level-workflow-diagram)
 - [Steps](#steps)
 - [Project Timeline and Key Milestones](#3-project-timeline-and-key-milestones)
+- [Running the Application](#running-the-application)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Running](#running)
+  - [Using the Application](#using-the-application)
 
 ---
 
@@ -29,8 +34,8 @@ Repository link: [dvanosdall/GEOG_777_Project_1](https://github.com/dvanosdall/G
 
 Nitrogen-based compounds, such as nitrates in groundwater, can pose significant public health risks, including links to cancer. This project aims to explore the spatial relationship between nitrate concentrations in groundwater and cancer rates in Wisconsin. Using datasets provided in shapefiles:
 
-- **`well_nitrate.shp`**: Contains well nitrate concentrations.  
-- **`cancer_tracts.shp`**: Contains cancer cases aggregated at the census tract level.  
+- **`well_nitrate.shp`**: Contains well nitrate concentrations.
+- **`cancer_tracts.shp`**: Contains cancer cases aggregated at the census tract level.
 - **`cancer_county.shp`**: Contains county-level cancer data (optional, for high-level comparisons).
 
 The goal is to determine whether a statistical relationship exists between groundwater nitrate levels and cancer occurrences. The deliverables require an application layer to:
@@ -50,10 +55,10 @@ This plan leverages Python for data preprocessing, interpolation, and regression
 
 High nitrate concentrations in groundwater pose a significant health concern for Wisconsin communities. Evidence suggests a potential link between nitrate levels and cancer occurrences. To test this hypothesis:
 
-1. **Nitrate Analysis**: Interpolate scattered nitrate well data into a continuous raster (heatmap).  
-2. **Cancer Data**: Normalize census-based cancer incidences to adjust for population differences.  
-3. **Spatial Alignment**: Align datasets (nitrate raster with census tracts) to conduct correlation analyses.  
-4. **Regression**: Perform regression analysis to assess relationships between nitrate levels and cancer rates.  
+1. **Nitrate Analysis**: Interpolate scattered nitrate well data into a continuous raster (heatmap).
+2. **Cancer Data**: Normalize census-based cancer incidences to adjust for population differences.
+3. **Spatial Alignment**: Align datasets (nitrate raster with census tracts) to conduct correlation analyses.
+4. **Regression**: Perform regression analysis to assess relationships between nitrate levels and cancer rates.
 5. **Outputs**: Communicate analysis results using clean, styled maps and comprehensive reports.
 
 [Back to Top](#table-of-contents)
@@ -76,7 +81,7 @@ High nitrate concentrations in groundwater pose a significant health concern for
    - Example: Produce raster maps for \( k = 2, 3, 4 \).
 
 3. **Normalize Cancer Rates**
-   - Compute population-normalized cancer rates for each census tract:  
+   - Compute population-normalized cancer rates for each census tract:
      \[
      \text{Cancer Rate} = \frac{\text{Cancer Incidences}}{\text{Population}}
      \]
@@ -98,26 +103,40 @@ High nitrate concentrations in groundwater pose a significant health concern for
 
 ---
 
-### Technologies Used
+## Technologies Used
 
 The following technologies were selected to meet the requirements for the project workflow. All selections meet the technology requirements for the app workflow, and justification for these choices is provided in the project report.
 
-#### Programming Languages & Platforms
-- **Python**: Used for data cleaning, preprocessing, and statistical analysis.
-- **ArcGIS**: Used for spatial data visualization and map creation.
+### Programming Languages & Frameworks
+- **Python 3.13**: Core language for data processing, analysis, and web application backend.
+- **Flask 3.0**: Web framework for creating the interactive application interface.
 
-#### Python Libraries
-- **Geopandas**: To manipulate and process spatial data in shapefiles (loading, reprojecting, cleaning data).
-- **GDAL**: For reprojecting and processing spatial data.
-- **SciPy**: To implement the inverse distance weighting (IDW) interpolation for nitrate data.
-- **Rasterstats**: Used to align raster data with census tract boundaries via zonal statistics.
-- **Statsmodels**: For performing statistical regression analysis, including \( R^2 \) and p-values.
+### Python Libraries - Data Processing & Analysis
+- **Geopandas >= 0.14.0**: Manipulate and process spatial data in shapefiles (loading, reprojecting, cleaning).
+- **Pandas >= 2.1.0**: Data manipulation and analysis for tabular data.
+- **NumPy >= 1.26.0**: Numerical computing and array operations.
+- **SciPy >= 1.11.0**: Implement inverse distance weighting (IDW) interpolation and distance calculations.
+- **Rasterio >= 1.3.9**: Read, write, and manipulate raster data (GeoTIFF files).
+- **Rasterstats >= 0.19.0**: Align raster data with census tract boundaries via zonal statistics.
+- **Statsmodels >= 0.14.0**: Statistical regression analysis, including R² and p-values.
+- **Shapely >= 2.0.0**: Geometric operations and spatial relationship analysis.
+- **Fiona >= 1.9.0**: Read and write vector data formats.
+- **PyProj >= 3.6.0**: Coordinate reference system transformations.
+- **GDAL >= 3.8.0**: Geospatial data abstraction library for raster and vector processing.
 
-#### Supporting Tools
-- **Graphviz**: Needed for PlantUML local rendering in the README (generating high-level workflow diagrams).
-- **PlantUML**: Used to visually represent the project workflow as a diagram.
-- **VS Code**: IDE used for writing and testing Python code as well as document preparation.
+### Python Libraries - Visualization
+- **Matplotlib >= 3.8.0**: Create static visualizations, plots, and maps.
+- **Seaborn >= 0.13.0**: Statistical data visualization and enhanced plotting aesthetics.
+
+### Frontend Technologies
+- **HTML5**: Structure and content of the web interface.
+- **CSS3**: Styling and layout for the interactive dashboard.
+- **JavaScript (ES6+)**: Client-side interactivity, AJAX requests, and dynamic content updates.
+
+### Supporting Tools
 - **Git/GitHub**: Version control system to track changes and host the repository.
+- **VS Code**: IDE used for writing and testing Python code and web application development.
+- **PowerShell**: Command-line interface for running scripts and managing the environment.
 
 [Back to Top](#table-of-contents)
 
@@ -269,3 +288,42 @@ The **Final Submission** provides a polished presentation of the project's workf
 
 [Back to Top](#table-of-contents)
 
+---
+
+## Running the Application
+
+### Prerequisites
+1. **Python 3.13** installed
+2. **Virtual environment** activated
+3. **Dependencies** installed from `requirements.txt`
+
+### Installation
+```powershell```
+# Create and activate virtual environment
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+
+# Install dependencies
+pip install -r requirements.txt
+
+## Running
+# Start the Flask server
+python app.py
+
+# Open your browser to:
+# http://localhost:5000
+
+[Back to Top](#table-of-contents)
+
+---
+
+### Using the Application
+1. **Adjust Parameters**: Use the slider to set the IDW decay coefficient (k = 1.0 to 5.0)
+2. **Run Analysis**: Click "Run Analysis" to execute the complete workflow
+3. **View Results**:
+   - Regression statistics displayed in cards
+   - Four visualization tabs: Nitrate Map, Regression Plot, Comparison Maps, Diagnostics
+   - Click the **?** button on any visualization for detailed help
+4. **Download Results**: Export CSV data and statistical reports
+
+[Back to Top](#table-of-contents)
