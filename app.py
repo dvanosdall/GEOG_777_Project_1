@@ -258,13 +258,13 @@ def download_results():
     Download the regression results CSV file
     """
 
-    csv_path = RESULTS_DIR / 'regression_results.csv'
+    csv_path = RESULTS_DIR / 'regression_results_raw.csv'
 
     if csv_path.exists():
         return send_file(
             csv_path,
             as_attachment=True,
-            download_name='regression_results.csv',
+            download_name='regression_results_raw.csv',
             mimetype='text/csv'
         )
     else:
@@ -280,13 +280,13 @@ def download_report():
     Download the full statistical report
     """
 
-    report_path = RESULTS_DIR / 'regression_analysis_report.txt'
+    report_path = RESULTS_DIR / 'regression_analysis_report_raw.txt'
 
     if report_path.exists():
         return send_file(
             report_path,
             as_attachment=True,
-            download_name='regression_analysis_report.txt',
+            download_name='regression_analysis_report_raw.txt',
             mimetype='text/plain'
         )
     else:

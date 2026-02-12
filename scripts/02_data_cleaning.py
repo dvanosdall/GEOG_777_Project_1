@@ -208,7 +208,7 @@ def main():
     print(f"  • Spatial analysis")
     print(f"  • Regression modeling")
 
-    print("\n⏭  Next Step: IDW Interpolation (Step 3)")
+    print("\n  Next Step: IDW Interpolation (Step 3)")
     print("="*70 + "\n")
 
 if __name__ == "__main__":

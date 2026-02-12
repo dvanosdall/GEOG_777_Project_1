@@ -18,6 +18,10 @@ Statistical Method: Ordinary Least Squares (OLS) Linear Regression
     - ε = error term (unexplained variation)
 
 Output: Statistical report, visualizations, and model diagnostics
+
+Usage:
+    python scripts/05_regression_analysis.py              # Raw data (preserves sample)
+    python scripts/05_regression_analysis.py --clean      # Cleaned data (removes impossible values)
 """
 
 import geopandas as gpd
@@ -61,23 +65,26 @@ def load_data(data_path):
     return gdf
 
 
-def prepare_data(gdf):
+def prepare_data(gdf, clean_data=False):
     """
     Prepare data for regression analysis
 
     Purpose: Filter to only tracts with valid data for both variables
-    and handle any missing values or outliers.
+    and optionally handle missing values or outliers.
 
     Data Quality Checks:
     - Remove tracts with missing nitrate data (no wells nearby)
     - Remove tracts with missing cancer data
-    - Check for extreme outliers
-    - Verify data ranges are reasonable
+    - Optional: Remove impossible values (cancer rate > 1.0, negative nitrate from IDW)
+    - Optional: Check for extreme outliers
 
     Parameters:
     -----------
     gdf : GeoDataFrame
         Raw data with potential missing values
+    clean_data : bool
+        If True, remove impossible values and outliers
+        If False, keep all data as-is (default)
 
     Returns:
     --------
@@ -85,7 +92,7 @@ def prepare_data(gdf):
     """
 
     print("\n" + "-" * 70)
-    print("Preparing Data for Analysis")
+    print(f"Preparing Data for Analysis (clean_data={clean_data})")
     print("-" * 70)
 
     # Create analysis dataframe
@@ -93,18 +100,82 @@ def prepare_data(gdf):
 
     print(f"   Starting with {len(df)} tracts")
 
-    # Remove missing nitrate values
+    # ========== ALWAYS REMOVE MISSING VALUES ==========
+
+    # 1. Remove missing nitrate values
     # These are tracts outside the interpolation area
     df_clean = df.dropna(subset=['nitr_mean'])
     removed_nitrate = len(df) - len(df_clean)
-    print(f"   Removed {removed_nitrate} tracts with missing nitrate data")
+    if removed_nitrate > 0:
+        print(f"   Removed {removed_nitrate} tracts with missing nitrate data")
 
-    # Remove missing cancer values
+    # 2. Remove missing cancer values
+    initial_count = len(df_clean)
     df_clean = df_clean.dropna(subset=['canrate'])
-    removed_cancer = len(df) - removed_nitrate - len(df_clean)
-    print(f"   Removed {removed_cancer} tracts with missing cancer data")
+    removed_cancer = initial_count - len(df_clean)
+    if removed_cancer > 0:
+        print(f"   Removed {removed_cancer} tracts with missing cancer data")
 
-    print(f"   Final sample size: {len(df_clean)} tracts")
+    # ========== OPTIONAL DATA CLEANING ==========
+
+    if clean_data:
+        print(f"\n   Applying additional data cleaning...")
+
+        # 3. Remove impossible cancer rates (> 100%)
+        # This indicates data quality issues (more cases than population)
+        initial_count = len(df_clean)
+        invalid_cancer = df_clean[df_clean['canrate'] > 1.0]
+        if len(invalid_cancer) > 0:
+            print(f"   WARNING: Found {len(invalid_cancer)} tracts with cancer rate > 100%")
+            print(f"   Example: GEOID {invalid_cancer.iloc[0]['GEOID10']}, Rate: {invalid_cancer.iloc[0]['canrate']:.2f}")
+            df_clean = df_clean[df_clean['canrate'] <= 1.0]
+            print(f"   Removed {len(invalid_cancer)} tracts with impossible cancer rates")
+
+        # 4. Remove negative cancer rates (should be impossible)
+        initial_count = len(df_clean)
+        negative_cancer = df_clean[df_clean['canrate'] < 0]
+        if len(negative_cancer) > 0:
+            print(f"   WARNING: Found {len(negative_cancer)} tracts with negative cancer rate")
+            df_clean = df_clean[df_clean['canrate'] >= 0]
+            print(f"   Removed {len(negative_cancer)} tracts with negative cancer rates")
+
+        # 5. Handle negative nitrate from IDW extrapolation
+        # NOTE: Negative nitrate values come from IDW interpolation artifacts,
+        # not from the original well data (which is preserved unchanged).
+        initial_count = len(df_clean)
+        negative_nitrate = df_clean[df_clean['nitr_mean'] < 0]
+        if len(negative_nitrate) > 0:
+            print(f"   Note: Found {len(negative_nitrate)} tracts with negative nitrate (IDW artifacts)")
+            print(f"   These are interpolation artifacts, not from original well data")
+            df_clean = df_clean[df_clean['nitr_mean'] >= 0]
+            print(f"   Removed {len(negative_nitrate)} tracts for realistic interpretation")
+
+        # 6. Check for extreme outliers using z-score method
+        # Flag values more than 3 standard deviations from mean
+        from scipy.stats import zscore
+
+        z_nitrate = np.abs(zscore(df_clean['nitr_mean']))
+        z_cancer = np.abs(zscore(df_clean['canrate']))
+
+        extreme_outliers = (z_nitrate > 3) | (z_cancer > 3)
+        n_outliers = extreme_outliers.sum()
+
+        if n_outliers > 0:
+            print(f"   Found {n_outliers} extreme outliers (z-score > 3)")
+            # Only remove if they're a small fraction (<5%)
+            if n_outliers / len(df_clean) < 0.05:
+                df_clean = df_clean[~extreme_outliers]
+                print(f"   Removed {n_outliers} outliers")
+            else:
+                print(f"   Keeping outliers (too many to remove: {n_outliers/len(df_clean)*100:.1f}%)")
+
+    else:
+        print(f"\n   Keeping data as-is (no additional cleaning)")
+        print(f"   Note: May include negative nitrate (IDW artifacts) and cancer rate > 1.0")
+
+    print(f"\n   Final sample size: {len(df_clean)} tracts")
+
+    # ========== SUMMARY STATISTICS ==========
 
     # Display summary statistics
     print("\n   Summary Statistics:")
@@ -520,7 +591,7 @@ def create_comparison_maps(gdf, df_clean, output_path):
     print(f"   Saved: {output_path}")
 
 
-def create_report(results, output_path):
+def create_report(results, output_path, clean_mode=False, k_value=2.0):
     """
     Generate text report of regression analysis
 
@@ -541,6 +612,10 @@ def create_report(results, output_path):
         Regression results
     output_path : Path
         Where to save the report (.txt file)
+    clean_mode : bool
+        Whether data cleaning was applied
+    k_value : float
+        IDW k parameter used for interpolation
     """
 
     print(f"   Creating statistical report...")
@@ -549,6 +624,9 @@ def create_report(results, output_path):
     report.append("=" * 70)
     report.append("     REGRESSION ANALYSIS REPORT: NITRATE VS CANCER")
     report.append("=" * 70)
+    report.append("")
+    report.append(f"Analysis Mode: {'CLEANED DATA' if clean_mode else 'RAW DATA (as-is)'}")
+    report.append(f"IDW Parameter: k = {k_value}")
     report.append("")
 
     # Introduction
@@ -566,6 +644,19 @@ def create_report(results, output_path):
     report.append("Independent Variable: Mean nitrate level (mg/L)")
     report.append("Unit of Analysis: Census tracts")
     report.append(f"Sample Size: {results['n']} tracts with complete data")
+
+    if clean_mode:
+        report.append("")
+        report.append("Data Cleaning Applied:")
+        report.append("  - Removed cancer rates > 100% (impossible values)")
+        report.append("  - Removed negative nitrate (IDW extrapolation artifacts)")
+        report.append("  - Removed extreme outliers (z-score > 3)")
+    else:
+        report.append("")
+        report.append("Data Cleaning: None (raw data preserved)")
+        report.append("  - May include negative nitrate from IDW extrapolation")
+        report.append("  - May include cancer rates > 100%")
+
     report.append("")
 
     # Descriptive statistics
@@ -694,10 +785,6 @@ def create_report(results, output_path):
         report.append("detected in this analysis.")
     report.append("")
 
-    report.append("=" * 70)
-    report.append("                         END OF REPORT")
-    report.append("=" * 70)
-
     # Write to file
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(report))
@@ -720,17 +807,23 @@ def main():
     # Parse arguments
     parser = argparse.ArgumentParser(description='Regression Analysis: Nitrate vs Cancer')
     parser.add_argument('--k', type=float, default=2.0, help='k value used in IDW (for reference)')
+    parser.add_argument('--clean', action='store_true', help='Apply data cleaning (remove impossible values)')
     args = parser.parse_args()
 
     # Print header
     print("=" * 70)
     print("         STEP 5: REGRESSION ANALYSIS - NITRATE VS CANCER")
     print("=" * 70)
+    print(f"   Mode: {'CLEANED DATA' if args.clean else 'RAW DATA (as-is)'}")
+    print("=" * 70)
     print()
 
     # Setup paths
     base_dir = Path(__file__).parent.parent
     data_path = base_dir / 'data' / 'processed' / 'census_tracts_with_nitrate.shp'
+
+    # Add suffix to output files based on cleaning mode
+    suffix = '_cleaned' if args.clean else '_raw'
 
     output_dir = base_dir / 'outputs' / 'results'
     maps_dir = base_dir / 'outputs' / 'maps'
@@ -751,8 +844,8 @@ def main():
     gdf = load_data(data_path)
     print()
 
-    # Prepare data for analysis
-    df_clean = prepare_data(gdf)
+    # Prepare data for analysis (with or without cleaning)
+    df_clean = prepare_data(gdf, clean_data=args.clean)
     print()
 
     # Perform regression
@@ -764,13 +857,13 @@ def main():
     print("Creating Visualizations")
     print("-" * 70)
 
-    scatter_path = maps_dir / '05_scatter_regression.png'
+    scatter_path = maps_dir / f'05_scatter_regression{suffix}.png'
     create_scatter_plot(results, scatter_path)
 
-    residual_path = maps_dir / '05_residual_diagnostics.png'
+    residual_path = maps_dir / f'05_residual_diagnostics{suffix}.png'
     create_residual_plots(results, residual_path)
 
-    maps_path = maps_dir / '05_comparison_maps.png'
+    maps_path = maps_dir / f'05_comparison_maps{suffix}.png'
     create_comparison_maps(gdf, df_clean, maps_path)
 
     print()
@@ -780,8 +873,8 @@ def main():
     print("Generating Report")
     print("-" * 70)
 
-    report_path = output_dir / 'regression_analysis_report.txt'
-    create_report(results, report_path)
+    report_path = output_dir / f'regression_analysis_report{suffix}.txt'
+    create_report(results, report_path, clean_mode=args.clean, k_value=args.k)
     print()
 
     # Save results as CSV
@@ -789,7 +882,7 @@ def main():
     results_df['predicted_cancer'] = results['y_pred']
     results_df['residual'] = results['residuals']
 
-    csv_path = output_dir / 'regression_results.csv'
+    csv_path = output_dir / f'regression_results{suffix}.csv'
     results_df.to_csv(csv_path, index=False)
     print(f"   Saved results: {csv_path}")
     print()
@@ -799,6 +892,7 @@ def main():
     print("                      STEP 5 COMPLETE")
     print("=" * 70)
     print()
+    print(f" Analysis Mode: {'CLEANED' if args.clean else 'RAW (as-is)'}")
     print(" Analysis Summary:")
     print(f"  - Sample size: {results['n']} census tracts")
     print(f"  - R-squared: {results['r_squared']:.4f}")
@@ -816,7 +910,10 @@ def main():
     print("  - Review scatter plot for relationship strength")
     print("  - Check residual plots for assumption violations")
     print("  - Read full statistical report")
-    print("  - Consider trying different k values (--k parameter)")
+    if not args.clean:
+        print("  - Try with --clean flag to compare results")
+    else:
+        print("  - Compare with raw version (run without --clean)")
     print()
     print("=" * 70)
 
