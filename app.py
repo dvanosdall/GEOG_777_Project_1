@@ -150,9 +150,9 @@ def run_analysis():
 
         map_files = {
             'nitrate': MAPS_DIR / '04_nitrate_by_tract.png',
-            'scatter': MAPS_DIR / '05_scatter_regression.png',
-            'comparison': MAPS_DIR / '05_comparison_maps.png',
-            'diagnostics': MAPS_DIR / '05_residual_diagnostics.png'
+            'scatter': MAPS_DIR / '05_scatter_regression_raw.png',
+            'comparison': MAPS_DIR / '05_comparison_maps_raw.png',
+            'diagnostics': MAPS_DIR / '05_residual_diagnostics_raw.png'
         }
 
         for key, path in map_files.items():
