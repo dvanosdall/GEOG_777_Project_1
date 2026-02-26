@@ -162,9 +162,21 @@ def main():
     county = gpd.read_file(DATA_DIR / 'cancer_county.shp')
     print(f" Loaded {len(county)} counties")
 
-    # Validate data (doesn't modify, just checks)
+     # Validate data (doesn't modify, just checks)
     wells = validate_nitrate_data(wells)
     tracts = validate_cancer_data(tracts)
+
+    # depending what we want to do for neg values we can uncomment either
+    # option 1 sets negative values to 0 but keeps all wells, option 2 removes
+    # wells with negative values entirely
+    ############################################################################
+    # # *** CLIP NEGATIVE NITRATE TO ZERO, RIGHT HERE ***
+    # wells['nitr_ran'] = wells['nitr_ran'].clip(lower=0)
+    # print(f"Set negative nitrate values to 0. New min: {wells['nitr_ran'].min()}")
+
+    # # *** CLIP NEGATIVE NITRATE TO ZERO, RIGHT HERE ***
+    # wells = wells[wells['nitr_ran'] >= 0].copy()
+    # print(f"Set negative nitrate values to 0. New min: {wells['nitr_ran'].min()}")
 
     # Reproject to Wisconsin CRS for accurate distance calculations
     print_section("Reprojecting to Wisconsin Transverse Mercator")
