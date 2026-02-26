@@ -33,6 +33,27 @@ from scipy.spatial import cKDTree
 from pathlib import Path
 import argparse
 
+def cleanup_maps_folder(maps_dir, results_dir):
+    """
+    Delete Step 3–5 PNGs in maps_dir and nitrate_idw_k*.tif files in results_dir.
+    Keeps Step 1/2 static overview images intact.
+    Also deletes maps.zip.
+    """
+    from pathlib import Path
+    maps_dir = Path(maps_dir)
+    results_dir = Path(results_dir)
+
+    # Delete Step 3–5 PNGs
+    png_patterns = ['03_*.png', '04_*.png', '05_*.png', 'maps.zip']
+    for pattern in png_patterns:
+        for fpath in maps_dir.glob(pattern):
+            fpath.unlink()
+            print(f"Deleted {fpath}")
+
+    # Delete all Step 3 IDW rasters
+    for tif_file in results_dir.glob('nitrate_idw_k*.tif'):
+        tif_file.unlink()
+        print(f"Deleted {tif_file}")
 
 def idw_interpolation(points, values, grid_x, grid_y, k=2):
     """
@@ -395,6 +416,12 @@ def main():
     """
     Main execution function
     """
+
+    # Clean up old map files
+    base_dir = Path(__file__).parent.parent
+    maps_dir = base_dir / 'outputs' / 'maps'
+    results_dir = base_dir / 'outputs' / 'results'
+    cleanup_maps_folder(maps_dir, results_dir)
 
     # Parse command line arguments
     parser = argparse.ArgumentParser(description='IDW Interpolation of Nitrate Data')

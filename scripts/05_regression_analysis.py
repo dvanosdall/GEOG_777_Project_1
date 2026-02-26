@@ -33,6 +33,7 @@ from scipy import stats
 from pathlib import Path
 import argparse
 import warnings
+import zipfile
 
 # Set plotting style
 sns.set_style("whitegrid")
@@ -64,6 +65,33 @@ def load_data(data_path):
 
     return gdf
 
+def zip_maps_folder(maps_dir, results_dir, output_zip):
+    """
+    Zips all PNG files in maps_dir and nitrate_idw_k*.tif files in results_dir for download.
+
+    Parameters:
+    maps_dir: Path to folder containing map PNGs
+    results_dir: Path to folder containing IDW TIFs
+    output_zip: Path to the zip file to create
+    """
+    from pathlib import Path
+    import zipfile
+
+    maps_dir = Path(maps_dir)
+    results_dir = Path(results_dir)
+    output_zip = Path(output_zip)
+
+    with zipfile.ZipFile(output_zip, 'w') as zipf:
+        # Add PNGs from maps_dir
+        for png_file in maps_dir.glob('*.png'):
+            zipf.write(png_file, png_file.name)
+            print(f"Added {png_file.name} to zip")
+        # Add TIFs from results_dir (Step 3 raster outputs)
+        for tif_file in results_dir.glob('nitrate_idw_k*.tif'):
+            zipf.write(tif_file, tif_file.name)
+            print(f"Added {tif_file.name} to zip")
+
+    print(f"Created ZIP archive for download: {output_zip}")
 
 def prepare_data(gdf, clean_data=False):
     """
@@ -100,8 +128,6 @@ def prepare_data(gdf, clean_data=False):
 
     print(f"   Starting with {len(df)} tracts")
 
-    # ========== ALWAYS REMOVE MISSING VALUES ==========
-
     # 1. Remove missing nitrate values
     # These are tracts outside the interpolation area
     df_clean = df.dropna(subset=['nitr_mean'])
@@ -115,8 +141,6 @@ def prepare_data(gdf, clean_data=False):
     removed_cancer = initial_count - len(df_clean)
     if removed_cancer > 0:
         print(f"   Removed {removed_cancer} tracts with missing cancer data")
-
-    # ========== OPTIONAL DATA CLEANING ==========
 
     if clean_data:
         print(f"\n   Applying additional data cleaning...")
@@ -590,7 +614,6 @@ def create_comparison_maps(gdf, df_clean, output_path):
 
     print(f"   Saved: {output_path}")
 
-
 def create_report(results, output_path, clean_mode=False, k_value=2.0):
     """
     Generate text report of regression analysis
@@ -810,6 +833,9 @@ def main():
     parser.add_argument('--clean', action='store_true', help='Apply data cleaning (remove impossible values)')
     args = parser.parse_args()
 
+    base_dir = Path(__file__).parent.parent
+    maps_dir = base_dir / 'outputs' / 'maps'
+
     # Print header
     print("=" * 70)
     print("         STEP 5: REGRESSION ANALYSIS - NITRATE VS CANCER")
@@ -865,6 +891,17 @@ def main():
 
     maps_path = maps_dir / f'05_comparison_maps{suffix}.png'
     create_comparison_maps(gdf, df_clean, maps_path)
+
+    # Generate zip
+    print("-" * 70)
+    print("Generating Zip Archive of Charts")
+    print("-" * 70)
+
+    base_dir = Path(__file__).parent.parent
+    maps_dir = base_dir / 'outputs' / 'maps'
+    results_dir = base_dir / 'outputs' / 'results'
+    output_zip = maps_dir / 'maps.zip'
+    zip_maps_folder(maps_dir, results_dir, output_zip)
 
     print()
 

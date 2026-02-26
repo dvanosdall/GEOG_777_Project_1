@@ -8,19 +8,58 @@
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <header>
-            <h1>Nitrate-Cancer Spatial Analysis</h1>
-            <p class="subtitle">GEOG 777 Project - Interactive IDW Analysis</p>
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>Nitrate-Cancer Spatial Analysis</h1>
+                    <div class="subtitle-row">
+                        <p class="subtitle">GEOG 777 Project - Interactive IDW Analysis</p>
+                        <div class="about-header-right">
+                            <span class="about-label">About</span>
+                            <button class="help-btn-circle" onclick="toggleAbout()" id="about-toggle-btn">
+                                <span id="about-icon">▼</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </header>
 
-        <!-- Controls Panel -->
+        <section class="about-panel" id="about-panel" style="display: block;">
+            <div class="about-content-expanded">
+                <div class="about-grid">
+                    <div class="about-box">
+                        <h3>What does this do?</h3>
+                        <p>This tool tests whether <strong>groundwater nitrate levels</strong> predict <strong>cancer rates</strong> across Wisconsin census tracts using spatial regression.</p>
+                        <p><strong>Analysis steps:</strong></p>
+                        <ol>
+                            <li>IDW interpolation creates a continuous nitrate surface from well measurements</li>
+                            <li>Zonal statistics extract average nitrate per census tract</li>
+                            <li>OLS regression tests the nitrate-cancer relationship</li>
+                        </ol>
+                    </div>
+
+                    <div class="about-box">
+                        <h3>How to use it</h3>
+                        <p><strong>Step 1:</strong> Adjust the <strong>k parameter</strong> (distance decay coefficient)</p>
+                        <ul>
+                            <li><strong>k = 2</strong> (default): Standard IDW</li>
+                            <li><strong>Higher k (3-5):</strong> More localized patterns</li>
+                            <li><strong>Lower k (1):</strong> Smoother surface</li>
+                        </ul>
+                        <p><strong>Step 2:</strong> Click "Run Analysis" (takes ~2 minutes)</p>
+                        <p><strong>Step 3:</strong> Review regression results and maps below</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="controls-panel">
-            <div class="control-group">
-                <label for="k-slider">
-                    <strong>Distance Decay Coefficient (k):</strong>
-                    <span id="k-value" class="k-display">2.0</span>
-                </label>
+            <div class="slider-row-single">
+                <strong>Distance Decay Coefficient (k):</strong>
+                <span id="k-value" class="k-display">2.0</span>
+                <span class="slider-separator">|</span>
+                <span class="slider-label-left">1.0 (less weight to distance)</span>
                 <input
                     type="range"
                     id="k-slider"
@@ -29,133 +68,145 @@
                     step="0.1"
                     value="2.0"
                 >
-                <div class="k-labels">
-                    <span>1.0 (less weight to distance)</span>
-                    <span>5.0 (more weight to distance)</span>
-                </div>
+                <span class="slider-label-right">5.0 (more weight to distance)</span>
             </div>
 
             <button id="run-btn" class="btn-primary">
                 <span id="btn-text">Run Analysis</span>
-                <span id="btn-spinner" class="spinner" style="display: none;">⏳</span>
+                <span id="btn-spinner" style="display: none;">
+                    <span class="spinner-icon">⏳</span>
+                    <span id="btn-status">Analyzing... (~2 min)</span>
+                </span>
             </button>
-
-            <div id="progress-container" style="display: none;">
-                <div class="progress-bar">
-                    <div id="progress-fill"></div>
-                </div>
-                <p id="progress-text">Initializing...</p>
-            </div>
         </section>
 
-        <!-- Results Summary -->
         <section id="results-section" style="display: none;">
-            <h2>Regression Results</h2>
+            <h2>Analysis Results</h2>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Sample Size</div>
-                    <div class="stat-value" id="stat-n">-</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-label">R² (Variance Explained)</div>
-                    <div class="stat-value" id="stat-r2">-</div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-label">p-value</div>
-                    <div class="stat-value" id="stat-p">-</div>
-                    <div class="stat-significance" id="stat-sig"></div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-label">Slope (Beta1)</div>
-                    <div class="stat-value" id="stat-slope">-</div>
-                </div>
+            <div class="main-tabs">
+                <button class="main-tab-btn active" data-maintab="summary">Summary</button>
+                <button class="main-tab-btn" data-maintab="nitrate">Nitrate Map</button>
+                <button class="main-tab-btn" data-maintab="scatter">Scatter Plot</button>
+                <button class="main-tab-btn" data-maintab="comparison">Comparison</button>
+                <button class="main-tab-btn" data-maintab="diagnostics">Diagnostics</button>
+                <button class="main-tab-btn" data-maintab="download">Download</button>
             </div>
 
-            <div class="interpretation" id="interpretation">
-                <h3>Interpretation:</h3>
-                <p id="interpretation-text"></p>
+            <div class="main-tab-content">
+
+                <div id="maintab-summary" class="main-tab-pane active">
+                    <div class="results-container">
+
+                        <div class="results-left">
+                            <h3>Regression Statistics</h3>
+
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-label">Sample Size</div>
+                                    <div class="stat-value" id="stat-n">-</div>
+                                </div>
+
+                                <div class="stat-card">
+                                    <div class="stat-label">R² (Variance Explained)</div>
+                                    <div class="stat-value" id="stat-r2">-</div>
+                                </div>
+
+                                <div class="stat-card">
+                                    <div class="stat-label">p-value</div>
+                                    <div class="stat-value" id="stat-p">-</div>
+                                    <div class="stat-significance" id="stat-sig"></div>
+                                </div>
+
+                                <div class="stat-card">
+                                    <div class="stat-label">Slope (β₁)</div>
+                                    <div class="stat-value" id="stat-slope">-</div>
+                                </div>
+                            </div>
+
+                            <div class="interpretation">
+                                <h3>Interpretation</h3>
+                                <p id="interpretation-text"></p>
+                            </div>
+                        </div>
+
+                        <div class="results-right">
+                            <h3>Key Visualization</h3>
+                            <div class="featured-map">
+                                <img id="map-scatter-preview" src="" alt="Regression Scatter Plot" style="display: none;">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="maintab-nitrate" class="main-tab-pane">
+                    <div class="viz-header">
+                        <h3>Nitrate Exposure by Census Tract</h3>
+                        <button class="help-btn-circle" onclick="openHelpModal('nitrate')">?</button>
+                    </div>
+                    <div class="single-viz">
+                        <img id="map-nitrate" src="" alt="Nitrate Map">
+                    </div>
+                </div>
+
+                <div id="maintab-scatter" class="main-tab-pane">
+                    <div class="viz-header">
+                        <h3>Regression: Nitrate vs Cancer Rate</h3>
+                        <button class="help-btn-circle" onclick="openHelpModal('scatter')">?</button>
+                    </div>
+                    <div class="single-viz">
+                        <img id="map-scatter" src="" alt="Scatter Plot">
+                    </div>
+                </div>
+
+                <div id="maintab-comparison" class="main-tab-pane">
+                    <div class="viz-header">
+                        <h3>Spatial Pattern Comparison</h3>
+                        <button class="help-btn-circle" onclick="openHelpModal('comparison')">?</button>
+                    </div>
+                    <div class="double-viz">
+                        <img id="map-comparison" src="" alt="Comparison Maps">
+                    </div>
+                </div>
+
+                <div id="maintab-diagnostics" class="main-tab-pane">
+                    <div class="viz-header">
+                        <h3>Regression Diagnostics</h3>
+                        <button class="help-btn-circle" onclick="openHelpModal('diagnostics')">?</button>
+                    </div>
+                    <div class="double-viz">
+                        <img id="map-diagnostics" src="" alt="Diagnostic Plots">
+                    </div>
+                </div>
+
+                <div id="maintab-download" class="main-tab-pane">
+                    <h3>Download Results</h3>
+                    <div class="download-grid">
+                        <a href="/api/download-results" class="download-btn" download>
+                            Results Data (CSV)
+                        </a>
+                        <a href="/api/download-report" class="download-btn" download>
+                            Statistical Report (TXT)
+                        </a>
+                        <a href="/api/download-maps" class="download-btn" download>
+                            All Charts (ZIP)
+                        </a>
+                    </div>
+                </div>
+
             </div>
         </section>
 
-        <!-- Visualizations -->
-        <section id="maps-section" style="display: none;">
-            <h2>Visualizations</h2>
-
-            <!-- Tabs -->
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="nitrate">Nitrate Map</button>
-                <button class="tab-btn" data-tab="scatter">Regression Plot</button>
-                <button class="tab-btn" data-tab="comparison">Comparison Maps</button>
-                <button class="tab-btn" data-tab="diagnostics">Diagnostics</button>
-            </div>
-
-            <!-- Tab Content -->
-            <div class="tab-content">
-                <!-- Nitrate Map Tab -->
-                <div id="tab-nitrate" class="tab-pane active">
-                    <div class="viz-header">
-                        <h3>Nitrate Levels by Census Tract <button class="help-btn-circle" onclick="openHelpModal('nitrate')">?</button></h3>
-                    </div>
-                    <img id="map-nitrate" src="" alt="Nitrate Map">
-                </div>
-
-                <!-- Scatter Plot Tab -->
-                <div id="tab-scatter" class="tab-pane">
-                    <div class="viz-header">
-                        <h3>Nitrate vs Cancer: Regression Analysis <button class="help-btn-circle" onclick="openHelpModal('scatter')">?</button></h3>
-                    </div>
-                    <img id="map-scatter" src="" alt="Scatter Plot">
-                </div>
-
-                <!-- Comparison Maps Tab -->
-                <div id="tab-comparison" class="tab-pane">
-                    <div class="viz-header">
-                        <h3>Side-by-Side Comparison <button class="help-btn-circle" onclick="openHelpModal('comparison')">?</button></h3>
-                    </div>
-                    <img id="map-comparison" src="" alt="Comparison Maps">
-                </div>
-
-                <!-- Diagnostics Tab -->
-                <div id="tab-diagnostics" class="tab-pane">
-                    <div class="viz-header">
-                        <h3>Regression Diagnostics <button class="help-btn-circle" onclick="openHelpModal('diagnostics')">?</button></h3>
-                    </div>
-                    <img id="map-diagnostics" src="" alt="Diagnostic Plots">
-                </div>
-            </div>
-        </section>
-
-        <!-- Download Section -->
-        <section id="download-section" style="display: none;">
-            <h2>Download Results</h2>
-            <div class="download-buttons">
-                <a href="/api/download-results" class="btn-download" download>
-                    Download CSV Results
-                </a>
-                <a href="/api/download-report" class="btn-download" download>
-                    Download Statistical Report
-                </a>
-            </div>
-        </section>
-
-        <!-- Footer -->
         <footer>
-            <p>GEOG 777 Project | University of Wisconsin-Madison | 2026</p>
+            <p>David Vanosdall | 2026 | GEOG 777 Project | University of Wisconsin-Madison </p>
             <p>Data: Wisconsin DNR | Analysis: IDW Interpolation + Linear Regression</p>
         </footer>
     </div>
 
-    <!-- Help Modal -->
     <div id="help-modal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeHelpModal()">&times;</span>
-            <div id="modal-body">
-                <!-- Content will be dynamically inserted -->
-            </div>
+            <div id="modal-body"></div>
         </div>
     </div>
 

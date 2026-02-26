@@ -342,6 +342,21 @@ def get_initial_results():
             'message': str(e)
         })
 
+@app.route('/api/download-maps', methods=['GET'])
+def download_maps():
+    """
+    Download a ZIP archive of all map images (for 'All Maps' button)
+    """
+    maps_zip = MAPS_DIR / 'maps.zip'
+    if not maps_zip.exists():
+        return "Zip not found.", 404
+    return send_file(
+        maps_zip,
+        as_attachment=True,
+        download_name='maps.zip',
+        mimetype='application/zip'
+    )
+
 
 if __name__ == '__main__':
     print("\n" + "="*70)

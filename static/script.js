@@ -18,13 +18,8 @@ const kValue = document.getElementById('k-value');
 const runBtn = document.getElementById('run-btn');
 const btnText = document.getElementById('btn-text');
 const btnSpinner = document.getElementById('btn-spinner');
-const progressContainer = document.getElementById('progress-container');
-const progressFill = document.getElementById('progress-fill');
-const progressText = document.getElementById('progress-text');
 
 const resultsSection = document.getElementById('results-section');
-const mapsSection = document.getElementById('maps-section');
-const downloadSection = document.getElementById('download-section');
 
 // Statistics elements
 const statN = document.getElementById('stat-n');
@@ -40,9 +35,6 @@ const mapScatter = document.getElementById('map-scatter');
 const mapComparison = document.getElementById('map-comparison');
 const mapDiagnostics = document.getElementById('map-diagnostics');
 
-// Tab buttons
-const tabButtons = document.querySelectorAll('.tab-btn');
-
 
 // Event Listeners
 // K slider update
@@ -53,16 +45,25 @@ kSlider.addEventListener('input', (e) => {
 // Run analysis button
 runBtn.addEventListener('click', runAnalysis);
 
-// Tab switching
-tabButtons.forEach(btn => {
+// Main tab switching
+document.querySelectorAll('.main-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-        const tabName = btn.dataset.tab;
-        switchTab(tabName);
+        const tabName = btn.dataset.maintab;
+        switchMainTab(tabName);
     });
 });
 
 // Load initial results on page load
 window.addEventListener('load', loadInitialResults);
+
+// Close modal when clicking outside of it
+window.onclick = function(event) {
+    const modal = document.getElementById('help-modal');
+    if (event.target === modal) {
+        closeHelpModal();
+    }
+};
+
 
 // Functions
 /**
@@ -75,8 +76,7 @@ async function loadInitialResults() {
 
         if (data.success && data.maps) {
             displayMaps(data.maps);
-            mapsSection.style.display = 'block';
-            downloadSection.style.display = 'block';
+            resultsSection.style.display = 'block';
         }
     } catch (error) {
         console.log('No previous results found');
@@ -89,19 +89,12 @@ async function loadInitialResults() {
 async function runAnalysis() {
     const k = parseFloat(kSlider.value);
 
-    // Disable button
+    // Disable button and show spinner
     runBtn.disabled = true;
     btnText.style.display = 'none';
-    btnSpinner.style.display = 'inline-block';
-
-    // Show progress bar
-    progressContainer.style.display = 'block';
-    updateProgress(0, 'Initializing analysis...');
+    btnSpinner.style.display = 'flex';
 
     try {
-        // Simulate progress updates
-        updateProgress(10, 'Step 1/3: Running IDW interpolation...');
-
         // Call API
         const response = await fetch('/api/run-analysis', {
             method: 'POST',
@@ -111,20 +104,11 @@ async function runAnalysis() {
             body: JSON.stringify({ k: k })
         });
 
-        updateProgress(40, 'Step 2/3: Extracting nitrate to census tracts...');
-
         const data = await response.json();
 
         if (!data.success) {
             throw new Error(data.message);
         }
-
-        updateProgress(70, 'Step 3/3: Running regression analysis...');
-
-        // Small delay for effect
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        updateProgress(100, 'Analysis complete!');
 
         // Display results
         displayResults(data.results);
@@ -132,34 +116,18 @@ async function runAnalysis() {
 
         // Show sections
         resultsSection.style.display = 'block';
-        mapsSection.style.display = 'block';
-        downloadSection.style.display = 'block';
 
         // Scroll to results
         resultsSection.scrollIntoView({ behavior: 'smooth' });
 
     } catch (error) {
         alert(`Error: ${error.message}`);
-        updateProgress(0, 'Analysis failed');
     } finally {
         // Re-enable button
         runBtn.disabled = false;
         btnText.style.display = 'inline-block';
         btnSpinner.style.display = 'none';
-
-        // Hide progress after delay
-        setTimeout(() => {
-            progressContainer.style.display = 'none';
-        }, 2000);
     }
-}
-
-/**
- * Update progress bar
- */
-function updateProgress(percent, text) {
-    progressFill.style.width = percent + '%';
-    progressText.textContent = text;
 }
 
 /**
@@ -229,6 +197,13 @@ function displayMaps(maps) {
     }
     if (maps.scatter) {
         mapScatter.src = 'data:image/png;base64,' + maps.scatter;
+
+        // Also show in preview if it exists
+        const previewImg = document.getElementById('map-scatter-preview');
+        if (previewImg) {
+            previewImg.src = 'data:image/png;base64,' + maps.scatter;
+            previewImg.style.display = 'block';
+        }
     }
     if (maps.comparison) {
         mapComparison.src = 'data:image/png;base64,' + maps.comparison;
@@ -239,12 +214,15 @@ function displayMaps(maps) {
 }
 
 /**
- * Switch between tabs
+ * Switch between main tabs
  */
-function switchTab(tabName) {
+function switchMainTab(tabName) {
+    const tabButtons = document.querySelectorAll('.main-tab-btn');
+    const tabPanes = document.querySelectorAll('.main-tab-pane');
+
     // Update buttons
     tabButtons.forEach(btn => {
-        if (btn.dataset.tab === tabName) {
+        if (btn.dataset.maintab === tabName) {
             btn.classList.add('active');
         } else {
             btn.classList.remove('active');
@@ -252,14 +230,30 @@ function switchTab(tabName) {
     });
 
     // Update panes
-    const panes = document.querySelectorAll('.tab-pane');
-    panes.forEach(pane => {
-        if (pane.id === 'tab-' + tabName) {
+    tabPanes.forEach(pane => {
+        if (pane.id === 'maintab-' + tabName) {
             pane.classList.add('active');
         } else {
             pane.classList.remove('active');
         }
     });
+}
+
+/**
+ * Toggle About section collapse/expand
+ */
+function toggleAbout() {
+    const panel = document.getElementById('about-panel');
+    const icon = document.getElementById('about-icon');
+    if (panel.style.display === 'none' || panel.style.display === '') {
+        // Show About panel
+        panel.style.display = 'block';
+        icon.textContent = '▼';
+    } else {
+        // Hide About panel
+        panel.style.display = 'none';
+        icon.textContent = '▲';
+    }
 }
 
 /**
@@ -417,11 +411,3 @@ function closeHelpModal() {
     const modal = document.getElementById('help-modal');
     modal.style.display = 'none';
 }
-
-// Close modal when clicking outside of it
-window.onclick = function(event) {
-    const modal = document.getElementById('help-modal');
-    if (event.target === modal) {
-        closeHelpModal();
-    }
-};
