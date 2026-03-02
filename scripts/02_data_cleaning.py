@@ -174,7 +174,7 @@ def main():
     # wells['nitr_ran'] = wells['nitr_ran'].clip(lower=0)
     # print(f"Set negative nitrate values to 0. New min: {wells['nitr_ran'].min()}")
 
-    # # *** CLIP NEGATIVE NITRATE TO ZERO, RIGHT HERE ***
+    #############################################################################
     # wells = wells[wells['nitr_ran'] >= 0].copy()
     # print(f"Set negative nitrate values to 0. New min: {wells['nitr_ran'].min()}")
 

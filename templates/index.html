@@ -31,12 +31,20 @@
                     <div class="about-box">
                         <h3>What does this do?</h3>
                         <p>This tool tests whether <strong>groundwater nitrate levels</strong> predict <strong>cancer rates</strong> across Wisconsin census tracts using spatial regression.</p>
+
                         <p><strong>Analysis steps:</strong></p>
                         <ol>
                             <li>IDW interpolation creates a continuous nitrate surface from well measurements</li>
                             <li>Zonal statistics extract average nitrate per census tract</li>
                             <li>OLS regression tests the nitrate-cancer relationship</li>
                         </ol>
+
+                        <p><strong>Note on ArcGIS vs Python results:</strong> If you compare outputs to ArcGIS, you may see slightly different slopes or R² values.
+                            This is expected because IDW and zonal statistics can differ by software (e.g., raster cell size/alignment, how many neighbors are used
+                            for IDW, and which raster cells are counted inside each tract). <strong>This app uses a 1000m raster by default and computes IDW using
+                            all available wells for each grid cell (preliminary tests included 500m raster and 32 nearest neighbors setting but for performance left
+                            it as the default)</strong>. The overall interpretation (direction and strength of the relationship) should
+                            remain consistent.</p>
                     </div>
 
                     <div class="about-box">

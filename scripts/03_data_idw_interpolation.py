@@ -120,7 +120,7 @@ def idw_interpolation(points, values, grid_x, grid_y, k=2):
     return grid_values
 
 
-def create_grid(wells, cell_size=1000):
+def create_grid(wells, tracts=None, cell_size=1000):
     """
     Create regular grid covering well locations
 
@@ -141,8 +141,12 @@ def create_grid(wells, cell_size=1000):
 
     print(f"   Creating grid with {cell_size}m cells...")
 
-    # Get bounds
-    minx, miny, maxx, maxy = wells.total_bounds
+    if tracts is not None:
+        minx, miny, maxx, maxy = tracts.total_bounds
+        print("   Using TRACTS extent for grid (recommended)")
+    else:
+        minx, miny, maxx, maxy = wells.total_bounds
+        print("   Using WELLS extent for grid")
 
     # Add buffer
     buffer = cell_size * 2
@@ -151,16 +155,12 @@ def create_grid(wells, cell_size=1000):
     maxx += buffer
     maxy += buffer
 
-    # Create grid
     x = np.arange(minx, maxx, cell_size)
     y = np.arange(miny, maxy, cell_size)
     grid_x, grid_y = np.meshgrid(x, y)
 
     transform = {
-        'minx': minx,
-        'miny': miny,
-        'maxx': maxx,
-        'maxy': maxy,
+        'minx': minx, 'miny': miny, 'maxx': maxx, 'maxy': maxy,
         'cell_size': cell_size
     }
 
@@ -438,6 +438,8 @@ def main():
     # Setup paths
     base_dir = Path(__file__).parent.parent
     wells_path = base_dir / 'data' / 'processed' / 'wells_cleaned.shp'
+    tracts_path = base_dir / 'data' / 'processed' / 'tracts_cleaned.shp'
+
     output_dir = base_dir / 'outputs' / 'results'
     maps_dir = base_dir / 'outputs' / 'maps'
 
@@ -452,12 +454,14 @@ def main():
     print(f"   Loaded {len(wells)} wells")
     print(f"   Nitrate range: {wells['nitr_ran'].min():.2f} to {wells['nitr_ran'].max():.2f} mg/L")
     print()
+    tracts = gpd.read_file(tracts_path)
+    print(f"   Loaded {len(tracts)} census tracts (for grid extent)")
 
     # Create grid
     print("-" * 70)
     print("Creating Interpolation Grid")
     print("-" * 70)
-    grid_x, grid_y, transform = create_grid(wells, cell_size=args.cell_size)
+    grid_x, grid_y, transform = create_grid(wells, tracts=tracts, cell_size=args.cell_size)
     print()
 
     # Get well coordinates and values

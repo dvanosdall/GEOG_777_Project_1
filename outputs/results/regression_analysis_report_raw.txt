@@ -16,7 +16,7 @@ Analysis: Ordinary Least Squares (OLS) Linear Regression
 Dependent Variable: Cancer rate (cases per person)
 Independent Variable: Mean nitrate level (mg/L)
 Unit of Analysis: Census tracts
-Sample Size: 1316 tracts with complete data
+Sample Size: 1401 tracts with complete data
 
 Data Cleaning: None (raw data preserved)
   - May include negative nitrate from IDW extrapolation
@@ -25,31 +25,31 @@ Data Cleaning: None (raw data preserved)
 DESCRIPTIVE STATISTICS
 ----------------------------------------------------------------------
 Nitrate (mg/L):
-  Mean: 3.80
-  SD:   2.71
-  Range: [-1.17, 14.24]
+  Mean: 3.74
+  SD:   2.69
+  Range: [-1.01, 13.53]
 
 Cancer Rate:
-  Mean: 0.1010
-  SD:   0.1487
+  Mean: 0.0954
+  SD:   0.1457
   Range: [0.0000, 1.0100]
 
 REGRESSION RESULTS
 ----------------------------------------------------------------------
 Model Equation:
-  cancer_rate = 0.076265 + 0.006494 * nitrate
+  cancer_rate = 0.069109 + 0.007033 * nitrate
 
 Coefficients:
-  Intercept (Beta0): 0.076265
-  Slope (Beta1):     0.006494 (SE = 0.001501)
-  95% CI:         [0.003549, 0.009439]
+  Intercept (Beta0): 0.069109
+  Slope (Beta1):     0.007033 (SE = 0.001436)
+  95% CI:         [0.004216, 0.009850]
 
 Model Fit:
-  R-squared:      0.0140
-  Adjusted R²:    0.0133
-  RMSE:           0.147614
-  F-statistic:    18.71
-  p-value:        0.000016
+  R-squared:      0.0169
+  Adjusted R²:    0.0162
+  RMSE:           0.144491
+  F-statistic:    23.98
+  p-value:        0.000001
 
 STATISTICAL SIGNIFICANCE
 ----------------------------------------------------------------------
@@ -61,10 +61,10 @@ EFFECT SIZE AND INTERPRETATION
 ----------------------------------------------------------------------
 Direction: POSITIVE relationship
 For every 1 mg/L increase in nitrate, cancer rate
-increases by 0.006494 on average.
+increases by 0.007033 on average.
 
-Variance Explained: 1.4%
-Nitrate levels explain 1.4% of the variation
+Variance Explained: 1.7%
+Nitrate levels explain 1.7% of the variation
 in cancer rates across census tracts.
 
 Strength: VERY WEAK relationship

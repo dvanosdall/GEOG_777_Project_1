@@ -124,7 +124,7 @@ def extract_zonal_stats(tracts, raster_path):
                 str(raster_path),
                 stats=['mean', 'min', 'max', 'std', 'count'],
                 nodata=-9999,
-                all_touched=False
+                all_touched=True
             )
 
         # Restore normal logging after calculation
@@ -148,6 +148,8 @@ def extract_zonal_stats(tracts, raster_path):
     tracts['nitr_max'] = [s['max'] if s['max'] is not None else np.nan for s in stats]
     tracts['nitr_std'] = [s['std'] if s['std'] is not None else np.nan for s in stats]
     tracts['nitr_count'] = [s['count'] if s['count'] is not None else 0 for s in stats]
+    zero_cells = (tracts["nitr_count"] == 0).sum()
+    print(f"   DEBUG: {zero_cells} tracts have nitr_count == 0 (no raster cells captured)")
 
     # Check for missing values
     # Some tracts may fall outside the raster extent (no well data nearby)
